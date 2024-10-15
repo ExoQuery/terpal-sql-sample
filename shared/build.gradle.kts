@@ -17,7 +17,16 @@ kotlin {
         }
     }
 
-    jvm()
+    listOf(
+       iosX64(),
+       iosArm64(),
+       iosSimulatorArm64()
+   ).forEach { iosTarget ->
+       iosTarget.binaries.framework {
+           baseName = "Shared"
+           isStatic = false
+       }
+   }
 
     sourceSets {
         commonMain.dependencies {
@@ -28,26 +37,37 @@ kotlin {
             implementation(libs.runtime)
             implementation(libs.kotlinx.datetime)
             implementation(libs.koin.core)
-            implementation(libs.terpal.core)
+            implementation(libs.terpal.core.get().simpleString()) {
+                exclude("com.sschr15.annotations","jb-annotations-kmp")
+            }
+            //compileOnly(libs.jetbrains.annotations.kmp)
         }
-        androidMain.dependencies {
-            implementation(libs.ktor.client.android)
-            implementation(libs.android.driver)
-            // not sure why putting this here blows things up
-            //implementation(libs.terpal.android)
+        androidMain {
+            dependencies {
+                implementation(libs.ktor.client.android)
+                implementation(libs.android.driver)
+                // not sure why putting this here blows things up
+                //implementation(libs.terpal.android)
+                implementation(libs.jetbrains.annotations)
+            }
         }
-        //iosMain.dependencies {
-        //    implementation(libs.ktor.client.darwin)
-        //    implementation(libs.native.driver)
-        //}
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+            implementation(libs.native.driver)
+            implementation(libs.terpal.native)
+            implementation(libs.jetbrains.annotations.kmp)
+        }
     }
 }
 
+fun MinimalExternalModuleDependency.simpleString() =
+    this.let { "${it.module}:${it.versionConstraint.requiredVersion}" }
+
 android {
     // Otherwise will complain there are duplicate annotations between jb-annotations and jb-annotations-kmp
-    configurations.forEach {
-        it.exclude(group = "com.sschr15.annotations", module = "jb-annotations-kmp")
-    }
+    //configurations.forEach {
+    //    it.exclude(group = "com.sschr15.annotations", module = "jb-annotations-kmp")
+    //}
 
     namespace = "com.example.project.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -68,12 +88,15 @@ sqldelight {
     }
 }
 
-//repositories {
-//        mavenLocal {
-//            mavenContent {
-//                includeModule("io.exoquery", "terpal-sql-core")
-//                includeModule("io.exoquery", "terpal-sql-core-jvm")
-//                includeModule("io.exoquery", "terpal-sql-android")
-//            }
+repositories {
+//    mavenLocal {
+//        mavenContent {
+//            includeModule("io.exoquery", "terpal-sql-core")
+//            includeModule("io.exoquery", "terpal-sql-core-jvm")
+//            includeModule("io.exoquery", "terpal-sql-android")
 //        }
-//}
+//    }
+    google()
+    mavenCentral()
+    mavenLocal()
+}

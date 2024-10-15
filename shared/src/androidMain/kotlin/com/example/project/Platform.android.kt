@@ -1,4 +1,4 @@
-package org.example.project
+package com.example.project
 
 import android.os.Build
 

@@ -33,11 +33,7 @@ kotlin {
         }
     }
 
-    jvm("desktop")
-
     sourceSets {
-        val desktopMain by getting
-
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -59,24 +55,23 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(projects.shared)
             implementation(libs.androidx.compose.material3)
-            implementation(libs.terpal.core)
-
+            implementation(libs.terpal.core.get().simpleString()) {
+                exclude("com.sschr15.annotations","jb-annotations-kmp")
+            }
             //implementation(libs.koin.compose.viewmodel)
-
             implementation(libs.androidx.lifecycle.viewmodel.compose)
-        }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
 
+fun MinimalExternalModuleDependency.simpleString() =
+    this.let { "${it.module}:${it.versionConstraint.requiredVersion}" }
+
 android {
 
-    configurations.forEach {
-        it.exclude(group = "com.sschr15.annotations", module = "jb-annotations-kmp")
-    }
+    //configurations.forEach {
+    //    it.exclude(group = "com.sschr15.annotations", module = "jb-annotations-kmp")
+    //}
 
     namespace = "com.example.project"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
