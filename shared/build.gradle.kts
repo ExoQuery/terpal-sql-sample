@@ -38,16 +38,15 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.koin.core)
             implementation(libs.terpal.core.get().simpleString()) {
+                // This interferes with org.jetbrains:annotations in the in the android modules
                 exclude("com.sschr15.annotations","jb-annotations-kmp")
             }
-            //compileOnly(libs.jetbrains.annotations.kmp)
         }
         androidMain {
             dependencies {
                 implementation(libs.ktor.client.android)
                 implementation(libs.android.driver)
                 // not sure why putting this here blows things up
-                //implementation(libs.terpal.android)
                 implementation(libs.jetbrains.annotations)
             }
         }
@@ -64,11 +63,6 @@ fun MinimalExternalModuleDependency.simpleString() =
     this.let { "${it.module}:${it.versionConstraint.requiredVersion}" }
 
 android {
-    // Otherwise will complain there are duplicate annotations between jb-annotations and jb-annotations-kmp
-    //configurations.forEach {
-    //    it.exclude(group = "com.sschr15.annotations", module = "jb-annotations-kmp")
-    //}
-
     namespace = "com.example.project.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
@@ -89,13 +83,6 @@ sqldelight {
 }
 
 repositories {
-//    mavenLocal {
-//        mavenContent {
-//            includeModule("io.exoquery", "terpal-sql-core")
-//            includeModule("io.exoquery", "terpal-sql-core-jvm")
-//            includeModule("io.exoquery", "terpal-sql-android")
-//        }
-//    }
     google()
     mavenCentral()
     mavenLocal()

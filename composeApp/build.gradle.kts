@@ -50,15 +50,14 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            //implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(projects.shared)
             implementation(libs.androidx.compose.material3)
             implementation(libs.terpal.core.get().simpleString()) {
+                // This interferes with org.jetbrains:annotations in the in the android modules
                 exclude("com.sschr15.annotations","jb-annotations-kmp")
             }
-            //implementation(libs.koin.compose.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
         }
     }
@@ -68,10 +67,6 @@ fun MinimalExternalModuleDependency.simpleString() =
     this.let { "${it.module}:${it.versionConstraint.requiredVersion}" }
 
 android {
-
-    //configurations.forEach {
-    //    it.exclude(group = "com.sschr15.annotations", module = "jb-annotations-kmp")
-    //}
 
     namespace = "com.example.project"
     compileSdk = libs.versions.android.compileSdk.get().toInt()

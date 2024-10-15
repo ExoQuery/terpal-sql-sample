@@ -3,16 +3,9 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
-        google {
-            //mavenContent {
-            //    includeGroupAndSubgroups("androidx")
-            //    includeGroupAndSubgroups("com.android")
-            //    includeGroupAndSubgroups("com.google")
-            //}
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
-        //mavenLocal()
     }
 }
 
@@ -27,13 +20,6 @@ dependencyResolutionManagement {
         }
         mavenCentral()
         mavenLocal()
-//        {
-//            mavenContent {
-//                includeModule("io.exoquery", "terpal-sql-core")
-//                includeModule("io.exoquery", "terpal-sql-core-jvm")
-//                includeModule("io.exoquery", "terpal-sql-android")
-//            }
-//        }
     }
 }
 
